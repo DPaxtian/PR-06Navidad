@@ -57,9 +57,9 @@
             <Image url="@../../IMAGENES/suetermujer.png" />
          </image>
       </ImageView>
-      <TextField fx:id="tfCalcetines" layoutX="365.0" layoutY="346.0" prefHeight="31.0" prefWidth="59.0" />
-      <TextField fx:id="tfSueterH" layoutX="365.0" layoutY="521.0" prefHeight="31.0" prefWidth="59.0" />
-      <TextField fx:id="tfSueterM" layoutX="363.0" layoutY="729.0" prefHeight="31.0" prefWidth="59.0" />
+      <TextField fx:id="tfCalcetines" layoutX="365.0" layoutY="346.0" prefHeight="31.0" prefWidth="59.0" text="0" />
+      <TextField fx:id="tfSueterH" layoutX="365.0" layoutY="521.0" prefHeight="31.0" prefWidth="59.0" text="0" />
+      <TextField fx:id="tfSueterM" layoutX="363.0" layoutY="729.0" prefHeight="31.0" prefWidth="59.0" text="0" />
       <Label layoutX="519.0" layoutY="336.0" text="CÓDIGO DE DESCUENTO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -90,7 +90,7 @@
       <TextField fx:id="tfDescuento" editable="false" layoutX="586.0" layoutY="486.0" prefHeight="25.0" prefWidth="137.0" />
       <TextField fx:id="tfIVA" editable="false" layoutX="586.0" layoutY="524.0" prefHeight="25.0" prefWidth="137.0" />
       <TextField fx:id="tfTotal" editable="false" layoutX="586.0" layoutY="570.0" prefHeight="25.0" prefWidth="137.0" />
-      <Button fx:id="btnPedido" layoutX="489.0" layoutY="616.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="234.0" text="Gracias por su pedido!">
+      <Button fx:id="btnPedido" layoutX="489.0" layoutY="616.0" mnemonicParsing="false" onAction="#calcularVenta" prefHeight="53.0" prefWidth="234.0" text="Gracias por su pedido!">
          <font>
             <Font size="15.0" />
          </font>
@@ -100,13 +100,13 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="tfFechaE" editable="false" layoutX="530.0" layoutY="732.0" prefHeight="25.0" prefWidth="155.0" />
-      <Button fx:id="btnSiguiente" layoutX="524.0" layoutY="773.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="168.0" text="Siguiente">
+      <TextField fx:id="tfFechaE" editable="false" layoutX="481.0" layoutY="732.0" prefHeight="25.0" prefWidth="279.0" />
+      <Button fx:id="btnSiguiente" layoutX="524.0" layoutY="773.0" mnemonicParsing="false" onAction="#limpiarCampos" prefHeight="37.0" prefWidth="168.0" text="Siguiente">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btnSalir" layoutX="524.0" layoutY="821.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="168.0" text="Salir">
+      <Button fx:id="btnSalir" layoutX="524.0" layoutY="821.0" mnemonicParsing="false" onAction="#salir" prefHeight="37.0" prefWidth="168.0" text="Salir">
          <font>
             <Font size="15.0" />
          </font>
