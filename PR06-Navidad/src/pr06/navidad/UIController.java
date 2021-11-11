@@ -149,67 +149,114 @@ public class UIController implements Initializable {
                     this.tfFechaE.setText(getDiaSemana());
                 }
                 break;
+            default:
+                subTotal = (totalCalcetines * 250) + (totalSueterH * 520) + (totalSueterM * 450);
+                IVA = subTotal * 0.16;
+                total = subTotal + IVA;
+
+                if (restarInventario()) {
+                    this.tfSubTotal.setText("$" + String.valueOf(subTotal));
+                    this.tfDescuento.setText(String.valueOf(descuento) + "%");
+                    this.tfIVA.setText("$" + String.valueOf(IVA));
+                    this.tfTotal.setText("$" + String.valueOf(total));
+                    this.tfFechaE.setText(getDiaSemana());
+                }
+                break;
         }
     }
     
     
     private boolean restarInventario(){
-        boolean esValido = false;
+        boolean esValido = true;
+        boolean existeInventario = true;
         
-        if(inventarioCalcetines == 0 && inventarioSueterH == 0 && inventarioSueterM == 0 ){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if(inventarioCalcetines == 0 && inventarioSueterH == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH );
-        }else if(inventarioCalcetines == 0 && inventarioSueterM == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \n Calcetines: " + inventarioCalcetines +inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if(inventarioSueterH == 0 && inventarioSueterM == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if(inventarioCalcetines == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \nCalcetines: " + inventarioCalcetines);
-        }else if(inventarioSueterH == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Hombre: " + inventarioSueterH);
-        }else if(inventarioSueterM == 0){
-            alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Mujer: " + inventarioSueterM);
+        
+        if(inventarioCalcetines == 0 && inventarioSueterH == 0 && inventarioSueterM == 0 && totalCalcetines >=1 && totalSueterH>=1 && totalSueterM>= 1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
+            totalCalcetines = 0;
+            totalSueterH = 0;
+            totalSueterM = 0;
+            esValido = false;
+            existeInventario = false;
+        }else if(inventarioCalcetines == 0 && inventarioSueterH == 0 && totalCalcetines>=1 && totalSueterH>=1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH );
+            totalCalcetines = 0;
+            totalSueterH = 0;
+            esValido = false;
+            existeInventario = false;
+        }else if(inventarioCalcetines == 0 && inventarioSueterM == 0  && totalCalcetines>=1 && totalSueterM>=1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \n Calcetines: " + inventarioCalcetines +inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
+            totalCalcetines = 0;
+            totalSueterM = 0;
+            esValido = false;
+            existeInventario = false;
+        }else if(inventarioSueterH == 0 && inventarioSueterM == 0 && totalSueterH >=1 && totalSueterM >= 1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
+            totalSueterH = 0;
+            totalSueterM = 0;
+            esValido = false;
+            existeInventario = false;
+        }else if(inventarioCalcetines == 0 && totalCalcetines >=1 ){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \nCalcetines: " + inventarioCalcetines);
+            totalCalcetines = 0;
+            esValido = false;
+        }else if(inventarioSueterH == 0 && totalSueterH >=1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \nSueter Hombre: " + inventarioSueterH);
+            totalSueterH = 0;
+            esValido = false;
+        }else if(inventarioSueterM == 0 && totalSueterM >=1){
+            alertaInventario("Inventario insuficiente \nUnidades restantes \nSueter Mujer: " + inventarioSueterM);
+            totalSueterM = 0;
+            esValido = false;
         }
         
-        if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0 ){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
-            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
-            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
-            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
-            this.btnPedido.fire();
-        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventanrio restante" );
-            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
-            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
-            this.btnPedido.fire();
-        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterM - totalSueterM) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \n Calcetines: " + inventarioCalcetines +inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
-            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
-            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
-            this.btnPedido.fire();
-        }else if((inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
-            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
-            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
-            this.btnPedido.fire();
-        }else if((inventarioCalcetines - totalCalcetines) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSe ha apartado el inventanrio restante");
-            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
-            this.btnPedido.fire();
-        }else if((inventarioSueterH - totalSueterH) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventanrio restante");
-            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
-            this.btnPedido.fire();
-        }else if((inventarioSueterM - totalSueterM) < 0){
-            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
-            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
-            this.btnPedido.fire();
-        } else {
-            esValido = true;
-            inventarioCalcetines = inventarioCalcetines - totalCalcetines;
-            inventarioSueterH = inventarioSueterH - totalSueterH;
-            inventarioSueterM = inventarioSueterM - totalSueterM;
+       
+        if (existeInventario) {
+            if ((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventario restante");
+                this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+                this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+                this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventario restante");
+                this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+                this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterM - totalSueterM) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \n Calcetines: " + inventarioCalcetines + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventario restante");
+                this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+                this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventario restante");
+                this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+                this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioCalcetines - totalCalcetines) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \nCalcetines: " + inventarioCalcetines + "\nSe ha apartado el inventario restante");
+                this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioSueterH - totalSueterH) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventario restante");
+                this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+                esValido = false;
+                this.btnPedido.fire();
+            } else if ((inventarioSueterM - totalSueterM) < 0) {
+                alertaInventario("Imposible cubrir pedido \nUnidades restantes \nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventario restante");
+                this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+                esValido = false;
+                this.btnPedido.fire();
+            } else {
+                inventarioCalcetines = inventarioCalcetines - totalCalcetines;
+                inventarioSueterH = inventarioSueterH - totalSueterH;
+                inventarioSueterM = inventarioSueterM - totalSueterM;
+            }
         }
         return esValido;
     }
@@ -306,7 +353,9 @@ public class UIController implements Initializable {
             Valor_dia="Martes";
         }
         int diaActual =fechaCalendario.get(Calendar.DAY_OF_MONTH);
-        int mes = fechaCalendario.get(Calendar.MONTH);
+        Date dateMes = new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("MM");
+        int mes = Integer.parseInt(simpleDate.format(dateMes));
         diaActual=diaActual+diaMas;
         int anio = fechaCalendario.get(Calendar.YEAR);
         String fechaEntrega = Valor_dia+" "+diaActual+" mes "+mes+" de "+anio;
