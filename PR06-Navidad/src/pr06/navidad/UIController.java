@@ -67,10 +67,9 @@ public class UIController implements Initializable {
 
     @FXML
     private void calcularVenta(ActionEvent event) {
-        totalCalcetines = Integer.parseInt(this.tfCalcetines.getText());
-        totalSueterH = Integer.parseInt(this.tfSueterH.getText());
-        totalSueterM = Integer.parseInt(this.tfSueterM.getText());
-
+        obtenerCliente();
+        obtenerPedido();
+        
         switch (this.tfCodigo.getText()) {
             case "":
                 subTotal = (totalCalcetines * 250) + (totalSueterH * 520) + (totalSueterM * 450);
@@ -156,20 +155,56 @@ public class UIController implements Initializable {
     
     private boolean restarInventario(){
         boolean esValido = false;
-        if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0 ){
+        
+        if(inventarioCalcetines == 0 && inventarioSueterH == 0 && inventarioSueterM == 0 ){
             alertaInventario("Inventario insuficiente \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0){
+        }else if(inventarioCalcetines == 0 && inventarioSueterH == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH );
-        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterM - totalSueterM) < 0){
+        }else if(inventarioCalcetines == 0 && inventarioSueterM == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \n Calcetines: " + inventarioCalcetines +inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if((inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0){
+        }else if(inventarioSueterH == 0 && inventarioSueterM == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM);
-        }else if((inventarioCalcetines - totalCalcetines) < 0){
+        }else if(inventarioCalcetines == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \nCalcetines: " + inventarioCalcetines);
-        }else if((inventarioSueterH - totalSueterH) < 0){
+        }else if(inventarioSueterH == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Hombre: " + inventarioSueterH);
-        }else if((inventarioSueterM - totalSueterM) < 0){
+        }else if(inventarioSueterM == 0){
             alertaInventario("Inventario insuficiente \n Unidades restantes \nSueter Mujer: " + inventarioSueterM);
+        }
+        
+        if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0 ){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
+            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+            this.btnPedido.fire();
+        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterH - totalSueterH) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \n Calcetines: " + inventarioCalcetines + "\nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventanrio restante" );
+            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+            this.btnPedido.fire();
+        }else if((inventarioCalcetines - totalCalcetines) < 0 && (inventarioSueterM - totalSueterM) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \n Calcetines: " + inventarioCalcetines +inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
+            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+            this.btnPedido.fire();
+        }else if((inventarioSueterH - totalSueterH) < 0 && (inventarioSueterM - totalSueterM) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
+            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+            this.btnPedido.fire();
+        }else if((inventarioCalcetines - totalCalcetines) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nCalcetines: " + inventarioCalcetines + "\nSe ha apartado el inventanrio restante");
+            this.tfCalcetines.setText(String.valueOf(inventarioCalcetines));
+            this.btnPedido.fire();
+        }else if((inventarioSueterH - totalSueterH) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Hombre: " + inventarioSueterH + "\nSe ha apartado el inventanrio restante");
+            this.tfSueterH.setText(String.valueOf(inventarioSueterH));
+            this.btnPedido.fire();
+        }else if((inventarioSueterM - totalSueterM) < 0){
+            alertaInventario("Imposible cubrir pedido \n Unidades restantes \nSueter Mujer: " + inventarioSueterM + "\nSe ha apartado el inventanrio restante");
+            this.tfSueterM.setText(String.valueOf(inventarioSueterM));
+            this.btnPedido.fire();
         } else {
             esValido = true;
             inventarioCalcetines = inventarioCalcetines - totalCalcetines;
@@ -206,6 +241,26 @@ public class UIController implements Initializable {
             alertEmptyInfo.setHeaderText("");
             alertEmptyInfo.setContentText(mensaje);
             alertEmptyInfo.showAndWait();
+    }
+    
+    private void obtenerPedido() {
+        try {
+            totalCalcetines = Integer.parseInt(this.tfCalcetines.getText());
+            totalSueterH = Integer.parseInt(this.tfSueterH.getText());
+            totalSueterM = Integer.parseInt(this.tfSueterM.getText());
+        } catch (NumberFormatException ex) {
+            alertaInventario("Introduzca unicamente números");
+        }
+    }
+    
+    private void obtenerCliente(){
+        if(this.tfNombre.getText().equals("") && this.tfDireccion.getText().equals("")){
+            alertaInventario("Por favor introduzca nombre y dirección");
+        }else if(this.tfDireccion.getText().equals("")){
+            alertaInventario("Por favor introduzca dirección de entrega");
+        }else if(this.tfNombre.getText().equals("")){
+            alertaInventario("Por favor introduzca nombre del cliente");
+        }
     }
     
     public String getDiaSemana(){
@@ -261,9 +316,5 @@ public class UIController implements Initializable {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return simpleDateFormat.format(date);
-    }
-
-    
-
-    
+    }    
 }
